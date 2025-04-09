@@ -3,9 +3,8 @@ using Demo.DataAccess.Contexts;
 
 namespace Demo.DataAccess.Repositories
 {
-    public class DepartmentRepository(AppDbContext dbContext) : IDepartmentRepository
+    public class DepartmentRepository(AppDbContext _dbContext) : IDepartmentRepository
     {
-        private readonly AppDbContext _dbContext;
 
 
         //public DepartmentRepository() : this()
