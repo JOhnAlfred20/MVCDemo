@@ -1,40 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Demo.BussinessLogic.DTOs;
+﻿using Demo.BusinessLogic.DTOs;
 using Demo.DataAccess.Models;
 
-namespace Demo.BussinessLogic.Factories
+namespace Demo.BusinessLogic.Factories
 {
-    public  static class DepartmentFactory
+    public static class DepartmentFactory
     {
-
-        // mappimg extension method 
-
-
-        
-        public static DepartmentDto ToDepartmentDto (this Department department)
+        public static DepartmentDto DepartmentDto(this Department department)
         {
-          return   new DepartmentDto()
+            return new DepartmentDto()
             {
                 DeptId = department.Id,
                 Name = department.Name,
                 Code = department.Code,
                 Description = department.Description,
-                DateOfCreation = department.CreatedOn,
+                DateOfCreation = department.CreatedOn
             };
-
-
-
         }
 
-
-
-
-
-        public static DepartmentDetailsDto ToDepartmentDetailsDto(this Department department)
+        public static DepartmentDetailsDto DepartmentDetailsDto(this Department department)
         {
             return new DepartmentDetailsDto()
             {
@@ -47,12 +30,8 @@ namespace Demo.BussinessLogic.Factories
                 LastModifiedBy = department.LastModifiedBy,
                 IsDeleted = department.IsDeleted
             };
-
-
-
         }
-
-        public static Department ToEntity(this CreateDepartmentDto dto)
+        public static Department TofEntity(this CreateDepartmentDto dto)
         {
             return new Department()
             {
@@ -62,6 +41,16 @@ namespace Demo.BussinessLogic.Factories
                 CreatedOn = dto.DateOfCreation
             };
         }
-
+        public static Department TofEntity(this UpdateDepartmentDto dto)
+        {
+            return new Department()
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Code = dto.Code,
+                Description = dto.Description,
+                CreatedOn = dto.DateOfCreation
+            };
+        }
     }
 }

@@ -1,69 +1,44 @@
-﻿using System;
-using Demo.DataAccess.Contexts;
+﻿using Demo.DataAccess.Contexts;
 
 namespace Demo.DataAccess.Repositories
 {
-    public class DepartmentRepository(AppDbContext _dbContext) : IDepartmentRepository
+    public class DepartmentRepository(AppDbContext dbContext) : IDepartmentRepository
     {
+        private readonly AppDbContext _DbContext = dbContext;
 
 
-        //public DepartmentRepository() : this()
-        //    {
 
-
-        //    }
-        //public DepartmentRepository(AppDbContext dbContext)
-        //{
-        //    _dbContext = dbContext;
-        //}
-
-        //  CRUD operations:
-        // get all
-        public IEnumerable<Department> GetAll(bool WithTracking = false)
+        //CRUD Operations
+        //GetAll
+        public IEnumerable<Department> GetAll(bool withTracking = false)
         {
-            if (WithTracking)
-            {
-                return _dbContext.Departments.ToList();
-            }
+            if (withTracking)
+                return _DbContext.Departments.ToList();
             else
-            {
-                return _dbContext.Departments.AsNoTracking().ToList();
-            }
+                return _DbContext.Departments.AsNoTracking().ToList();
         }
-
-        // get by id
-        public Department? GetById(int id) => _dbContext.Departments.Find(id);
-        // استخدام _dbContext بدلاً من dbContext
-
-
-
-
-
-        // add
-        public int Add(Department dept)
+        //GetById
+        public Department GetById(int id)
         {
-
-            _dbContext.Departments.Add(dept);
-            return _dbContext.SaveChanges();
+            return _DbContext.Departments.Find(id);
         }
-
-
-        // edit
-        public int Update(Department dept)
+        //Add
+        public int Add(Department department)
         {
-
-            _dbContext.Departments.Update(dept);
-            return _dbContext.SaveChanges();
+            _DbContext.Departments.Add(department);
+            return _DbContext.SaveChanges();
         }
-
-        // delete
-        public int Remove(Department dept)
+        //Edit
+        public int Update(Department department)
         {
-
-            _dbContext.Departments.Remove(dept);
-            return _dbContext.SaveChanges();
+            _DbContext.Departments.Update(department);
+            return _DbContext.SaveChanges();
         }
-
-
+        //Delete
+        public int Remove(Department department)
+        {
+            _DbContext.Departments.Remove(department);
+            return _DbContext.SaveChanges();
+        }
     }
 }
