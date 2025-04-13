@@ -1,5 +1,6 @@
 ﻿using Demo.BusinessLogic.DTOs;
-using Demo.BusinessLogic.Services;
+using Demo.BusinessLogic.DTOs.DepartmentDtos;
+using Demo.BusinessLogic.Services.Interfaces;
 using Demo.Peresentation.ViewModels.DepartmentsviewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +9,10 @@ namespace Demo.Presentation.Controllers
     public class DepartmentController(IDepartmentService _departmentService,
         ILogger<DepartmentController> _logger,
         IWebHostEnvironment _env) : Controller
-
     {
         public IActionResult Index()
         {
-
             var departments = _departmentService.GetAllDepartments();
-
             return View(departments);
         }
 
@@ -28,7 +26,6 @@ namespace Demo.Presentation.Controllers
         [HttpPost]
         public IActionResult Create(CreateDepartmentDto dto)
         {
-
             if (ModelState.IsValid)
             {
                 try
@@ -37,28 +34,24 @@ namespace Demo.Presentation.Controllers
                     if (res > 0) return RedirectToAction(nameof(Index));
                     else
                     {
-                        ModelState.AddModelError(String.Empty, "Error in creating department");
+                        ModelState.AddModelError(string.Empty, "Error in creating department");
                     }
                 }
                 catch (Exception ex)
                 {
-
                     if (_env.IsDevelopment())
                     {
-                        ModelState.AddModelError(String.Empty, ex.Message);
+                        ModelState.AddModelError(string.Empty, ex.Message);
                     }
                     else
                     {
                         _logger.LogError(ex.Message);
                     }
-
                 }
-
             }
             return View(dto);
         }
         #endregion
-
 
         #region Details
         public IActionResult Details(int? id)
@@ -73,35 +66,30 @@ namespace Demo.Presentation.Controllers
         }
         #endregion
 
-
-        #region Edit   
+        #region Edit
         [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (!id.HasValue) return BadRequest();
+
             var department = _departmentService.GetDepartmentById(id.Value);
-
             if (department is null) return NotFound();
-            else
-            {
-                var departmentViewModel = new DepartmentEditViewModel()
-                {
-                    Name = department.Name,
-                    Code = department.Code,
-                    Description = department.Description,
-                    DateOfCreation = department.DateOfCreation
 
-                };
-                return View(departmentViewModel);
-            }
+            var departmentViewModel = new DepartmentEditViewModel()
+            {
+                Name = department.Name,
+                Code = department.Code,
+                Description = department.Description,
+                DateOfCreation = department.DateOfCreation
+            };
+            return View(departmentViewModel);
         }
 
-
-
         [HttpPost]
-        public IActionResult Edit([FromRoute]int id,DepartmentEditViewModel departmentEditViewModel)
+        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentEditViewModel)
         {
             if (!ModelState.IsValid) return View(departmentEditViewModel);
+
             try
             {
                 var updatedDept = new UpdateDepartmentDto()
@@ -116,15 +104,14 @@ namespace Demo.Presentation.Controllers
                 if (res > 0) return RedirectToAction(nameof(Index));
                 else
                 {
-                    ModelState.AddModelError(String.Empty, "Department Can't Be Updated");
-                    //return View(departmentEditViewModel);
+                    ModelState.AddModelError(string.Empty, "Department Can't Be Updated");
                 }
             }
             catch (Exception ex)
             {
                 if (_env.IsDevelopment())
                 {
-                    ModelState.AddModelError(String.Empty, ex.Message);
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
                 else
                 {
@@ -135,8 +122,49 @@ namespace Demo.Presentation.Controllers
         }
         #endregion
 
+        #region Delete Department
+        //[HttpGet]
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (!id.HasValue) return BadRequest();
 
+        //    var department = _departmentService.GetDepartmentById(id.Value);
+        //    if (department == null) return NotFound();
 
+        //    return View(department);
+        //}
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0) return BadRequest();
+
+            try
+            {
+                var isDeleted = _departmentService.DeleteDepartment(id);
+                if (isDeleted) return RedirectToAction(nameof(Index));
+
+                ModelState.AddModelError(string.Empty, "Department Can't be Deleted");
+            }
+            catch (Exception ex)
+            {
+                if (_env.IsDevelopment())
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                else
+                {
+                    _logger.LogError(ex.Message);
+                }
+
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
+            return RedirectToAction(nameof(Delete), new { id });
+        }
 
     }
+    #endregion
+
 }
+

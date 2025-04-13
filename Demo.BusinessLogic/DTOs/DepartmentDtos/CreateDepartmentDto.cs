@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Demo.BusinessLogic.DTOs
+namespace Demo.BusinessLogic.DTOs.DepartmentDtos
 {
     public class CreateDepartmentDto
     {
@@ -8,7 +8,7 @@ namespace Demo.BusinessLogic.DTOs
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "Code Is Required")]
-        public int Code { get; set; } 
+        public int Code { get; set; }
 
         public string? Description { get; set; }
         public DateTime DateOfCreation { get; set; }
